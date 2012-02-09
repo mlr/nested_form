@@ -57,9 +57,14 @@ module NestedForm
     end
 
     def fields_for_nested_model(name, object, options, block)
-      output = '<div class="fields">'.html_safe
+      # Changed this method to allow for a "wrap_fields" option
+      # This option set to false will not wrap nested model fields in a div
+      # I needed this because I'm using nested fields inside a table
+      # HTML spec does not allow a div to be a direct child of a table
+      output = ''.html_safe
+      output.safe_concat('<div class="fields">') unless options[:wrap_fields] == false
       output << super
-      output.safe_concat('</div>')
+      output.safe_concat('</div>') unless options[:wrap_fields] == false
       output
     end
   end
